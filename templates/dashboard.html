@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - AgendaPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="{{ url_for('dashboard') }}" class="logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>AgendaPlus</span>
+                </a>
+                <button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
+                    <li><a href="{{ url_for('ajouter_rdv') }}"><i class="fas fa-calendar"></i><span>Mon agenda</span></a></li>
+                    <li><a href="#"><i class="fas fa-tasks"></i><span>Tâches</span><span class="badge">{{ tasks|length }}</span></a></li>
+                    <li><a href="#"><i class="fas fa-bell"></i><span>Rappels</span></a></li>
+                    <li><a href="#"><i class="fas fa-chart-bar"></i><span>Statistiques</span></a></li>
+                    <li><a href="#"><i class="fas fa-users"></i><span>Équipe</span></a></li>
+                    <li><a href="#"><i class="fas fa-cog"></i><span>Paramètres</span></a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-profile">
+                    <img src="{{ url_for('static', filename='images/avatar-placeholder.jpg') }}" alt="Avatar" class="avatar">
+                    <div class="user-info">
+                        <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+                        <div class="user-email">{{ user.email }}</div>
+                    </div>
+                </div>
+                <a href="{{ url_for('logout') }}" class="btn-logout"><i class="fas fa-sign-out-alt"></i></a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Rechercher...">
+                </div>
+                <div class="top-bar-actions">
+                    <button class="btn-notification">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">{{ rendez_vous|length }}</span>
+                    </button>
+                    <a href="{{ url_for('ajouter_rdv') }}" class="btn-quick-add">
+                        <i class="fas fa-plus"></i> Créer
+                    </a>
+                </div>
+            </div>
+            <div class="content-wrapper">
+                <h1 class="welcome-message">Bon retour, {{ user.first_name }}! Voici ce qui se passe aujourd'hui.</h1>
+
+                <!-- Stats Grid -->
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-icon violet-bg"><i class="fas fa-calendar"></i></div>
+                        <div>
+                            <div class="stats-value">{{ rendez_vous|length }}</div>
+                            <div class="stats-label">Événements aujourd'hui</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon blue-bg"><i class="fas fa-tasks"></i></div>
+                        <div>
+                            <div class="stats-value">{{ tasks|length }}</div>
+                            <div class="stats-label">Tâches en cours</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon orange-bg"><i class="fas fa-bell"></i></div>
+                        <div>
+                            <div class="stats-value">{{ rendez_vous|length }}</div>
+                            <div class="stats-label">Rappels</div>
+                        </div>
+                    </div>
+                    <div class="stats-card">
+                        <div class="stats-icon green-bg"><i class="fas fa-chart-line"></i></div>
+                        <div>
+                            <div class="stats-value">87%</div>
+                            <div class="stats-label">Productivité</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Grid -->
+                <div class="content-grid">
+                    <!-- Calendar Section -->
+                    <div>
+                        <div class="section-header">
+                            <h2>Mon agenda</h2>
+                            <a href="{{ url_for('ajouter_rdv') }}" class="btn-view-all">Voir tout</a>
+                        </div>
+                        <div class="mini-calendar">
+                            <div class="calendar-header">
+                                <button class="btn-prev"><i class="fas fa-chevron-left"></i></button>
+                                <div class="current-month">Juin 2025</div>
+                                <button class="btn-next"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                            <div class="calendar-grid">
+                                <div class="day-name">Lun</div>
+                                <div class="day-name">Mar</div>
+                                <div class="day-name">Mer</div>
+                                <div class="day-name">Jeu</div>
+                                <div class="day-name">Ven</div>
+                                <div class="day-name">Sam</div>
+                                <div class="day-name">Dim</div>
+                                <!-- Exemple statique, à dynamiser si besoin -->
+                                {% for day in range(1, 31) %}
+                                    <div class="day {{ 'current-day' if day == 21 }}">{{ day }}</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="upcoming-events">
+                            <h3>Aujourd'hui</h3>
+                            <ul class="event-list">
+                                {% for rdv in rendez_vous %}
+                                    <li class="event-item">
+                                        <span class="event-time">{{ rdv.heure }}</span>
+                                        <div>
+                                            <div class="event-title">{{ rdv.titre }}</div>
+                                            <div class="event-location">{{ rdv.description or 'Aucune description' }}</div>
+                                            <a href="{{ url_for('modifier_rdv', id=rdv.id) }}">Modifier</a>
+                                        </div>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Tasks Section -->
+                    <div>
+                        <div class="section-header">
+                            <h2>Mes tâches</h2>
+                            <button class="btn-view-all">Voir tout</button>
+                        </div>
+                        <div class="task-list">
+                            {% for task in tasks %}
+                                <div class="task-item">
+                                    <label class="task-checkbox">
+                                        <input type="checkbox" {{ 'checked' if task.completed }}>
+                                        <span class="checkmark"></span>
+                                    </label>
+                                    <div class="task-content">
+                                        <div class="task-title {{ 'completed' if task.completed }}">{{ task.title }}</div>
+                                        <div class="task-meta">
+                                            <span class="task-due">{{ task.due_date }}</span>
+                                            <span class="task-priority {{ task.priority }}">{{ task.priority|capitalize }} priorité</span>
+                                        </div>
+                                    </div>
+                                    <button class="task-menu"><i class="fas fa-ellipsis-v"></i></button>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        <div class="add-task">
+                            <input type="text" placeholder="Ajouter une tâche...">
+                            <button class="btn-add-task"><i class="fas fa-plus"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

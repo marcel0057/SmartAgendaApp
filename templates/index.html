@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgendaPlus</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="{{ url_for('index') }}" class="logo">
+                <i class="fas fa-calendar-alt"></i>
+                AgendaPlus
+            </a>
+            <ul class="nav-links">
+                <li><a href="#home">Accueil</a></li>
+                <li><a href="#features">Fonctionnalités</a></li>
+                <li><a href="#pricing">Tarifs</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="{{ url_for('login') }}" class="btn btn-outline">Connexion</a>
+                <a href="{{ url_for('register') }}" class="btn btn-primary">Inscription</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Organisez votre temps avec élégance</h1>
+                <p class="subtitle">AgendaPlus transforme votre gestion du temps avec une interface moderne et des outils puissants pour maximiser votre productivité.</p>
+                <div class="cta-buttons">
+                    <a href="{{ url_for('register') }}" class="btn btn-primary btn-large">Commencer gratuitement</a>
+                    <a href="#demo" class="btn btn-outline btn-large">Voir la démo</a>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="C:\Users\marcel\Pictures\Camera Roll\logo.png" alt="Dashboard Preview" class="dashboard-preview">
+                <div class="color-spot spot-1"></div>
+                <div class="color-spot spot-2"></div>
+                <div class="color-spot spot-3"></div>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" id="features">
+        <div class="container">
+            <h2>Fonctionnalités clés</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon violet-bg"><i class="fas fa-bell"></i></div>
+                    <h3>Rappels intelligents</h3>
+                    <p>Ne manquez plus jamais un événement important avec nos rappels personnalisés.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue-bg"><i class="fas fa-users"></i></div>
+                    <h3>Collaboration</h3>
+                    <p>Partagez votre agenda et travaillez en équipe en temps réel.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon orange-bg"><i class="fas fa-chart-pie"></i></div>
+                    <h3>Analytiques</h3>
+                    <p>Visualisez comment vous passez votre temps avec des graphiques clairs.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green-bg"><i class="fas fa-mobile-alt"></i></div>
+                    <h3>Multi-plateforme</h3>
+                    <p>Accédez à votre agenda depuis n'importe quel appareil, à tout moment.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonials">
+        <div class="container">
+            <h2>Ce que nos utilisateurs disent</h2>
+            <div class="testimonial-cards">
+                <div class="testimonial-card">
+                    <p class="quote">"AgendaPlus a complètement transformé ma productivité. Je ne pourrais plus m'en passer!"</p>
+                    <div class="user">
+                        <img src="https://via.placeholder.com/50" alt="User Avatar" class="user-avatar">
+                        <div>
+                            <div class="user-name">Marie Dupont</div>
+                            <div class="user-title">Cheffe de projet</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-card">
+                    <p class="quote">"L'interface est magnifique et tellement intuitive. La meilleure application d'agenda que j'ai utilisée."</p>
+                    <div class="user">
+                        <img src="https://via.placeholder.com/50" alt="User Avatar" class="user-avatar">
+                        <div>
+                            <div class="user-name">Jean Martin</div>
+                            <div class="user-title">Freelance</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-brand">
+                <a href="{{ url_for('index') }}" class="footer-logo">
+                    <i class="fas fa-calendar-alt"></i>
+                    AgendaPlus
+                </a>
+                <p class="footer-slogan">Organisez votre temps avec élégance</p>
+            </div>
+            <div class="footer-links-container">
+                <div class="footer-links-group">
+                    <h4>Produit</h4>
+                    <ul>
+                        <li><a href="#features">Fonctionnalités</a></li>
+                        <li><a href="#pricing">Tarifs</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Entreprise</h4>
+                    <ul>
+                        <li><a href="#about">À propos</a></li>
+                        <li><a href="#blog">Blog</a></li>
+                        <li><a href="#careers">Carrières</a></li>
+                    </ul>
+                </div>
+                <div class="footer-links-group">
+                    <h4>Légal</h4>
+                    <ul>
+                        <li><a href="#privacy">Confidentialité</a></li>
+                        <li><a href="#terms">Conditions</a></li>
+                        <li><a href="#cookies">Cookies</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-linkedin"></i></a>
+                <a href="#"><i class="fab fa-facebook"></i></a>
+            </div>
+            <p class="copyright">© 2025 AgendaPlus. Tous droits réservés.</p>
+        </div>
+    </footer>
+</body>
+</html>
