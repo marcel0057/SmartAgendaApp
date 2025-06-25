@@ -1,0 +1,25 @@
+<div class="sidebar-header">
+    <a href="{{ url_for('dashboard') }}" class="logo">
+        <i class="fas fa-calendar-alt"></i>
+        <span>AgendaPlus</span>
+    </a>
+    <button class="sidebar-toggle"><i class="fas fa-bars"></i></button>
+</div>
+<nav class="sidebar-nav">
+    <ul>
+        <li><a href="{{ url_for('dashboard') }}"><i class="fas fa-tachometer-alt"></i><span>Tableau de bord</span></a></li>
+        <li><a href="{{ url_for('ajouter_rdv') }}"><i class="fas fa-calendar"></i><span>Mon agenda</span></a></li>
+        <li><a href="#"><i class="fas fa-tasks"></i><span>Tâches</span></a></li>
+        <li><a href="#"><i class="fas fa-bell"></i><span>Rappels</span></a></li>
+    </ul>
+</nav>
+<div class="sidebar-footer">
+    <div class="user-profile">
+        <img src="{{ url_for('static', filename='images/avatar-placeholder.jpg') }}" alt="Avatar" class="avatar">
+        <div class="user-info">
+            <div class="user-name">{{ user.first_name }} {{ user.last_name }}</div>
+            <div class="user-email">{{ user.email }}</div>
+        </div>
+    </div>
+    <a href="{{ url_for('logout') }}" class="btn-logout"><i class="fas fa-sign-out-alt"></i></a>
+</div>

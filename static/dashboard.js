@@ -1,67 +1,86 @@
-// static/dashboard.js
+// dashboard.js (version mise à jour)
 document.addEventListener('DOMContentLoaded', function() {
-    // Toggle sidebar on mobile
+    // Toggle sidebar
     const sidebarToggle = document.querySelector('.sidebar-toggle');
-    const sidebar = document.querySelector('.sidebar');
-    
-    if (sidebarToggle && sidebar) {
+    if (sidebarToggle) {
         sidebarToggle.addEventListener('click', function() {
-            sidebar.classList.toggle('collapsed');
+            document.querySelector('.sidebar').classList.toggle('collapsed');
         });
     }
 
-    // Task completion toggle
-    const taskCheckboxes = document.querySelectorAll('.task-checkbox input');
-    taskCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            const taskTitle = this.closest('.task-item').querySelector('.task-title');
-            if (this.checked) {
-                taskTitle.classList.add('completed');
-                // TODO: Mettre à jour la tâche dans Supabase
-                // fetch('/api/tasks/update', { method: 'POST', body: JSON.stringify({ id: taskId, completed: true }) })
-            } else {
-                taskTitle.classList.remove('completed');
-                // TODO: Mettre à jour la tâche dans Supabase
-            }
-        });
-    });
-
-    // Add new task
+    // Gestion des tâches
+    const taskList = document.querySelector('.task-list');
     const addTaskInput = document.querySelector('.add-task input');
     const addTaskBtn = document.querySelector('.btn-add-task');
-    
-    if (addTaskInput && addTaskBtn) {
-        addTaskBtn.addEventListener('click', function() {
-            const taskText = addTaskInput.value.trim();
-            if (taskText) {
-                const taskList = document.querySelector('.task-list');
-                const newTask = document.createElement('div');
-                newTask.className = 'task-item';
-                newTask.innerHTML = `
-                    <label class="task-checkbox">
-                        <input type="checkbox">
-                        <span class="checkmark"></span>
-                    </label>
-                    <div class="task-content">
-                        <div class="task-title">${taskText}</div>
-                        <div class="task-meta">
-                            <span class="task-due">Aujourd'hui</span>
-                            <span class="task-priority medium">Moyenne priorité</span>
-                        </div>
-                    </div>
-                    <button class="task-menu"><i class="fas fa-ellipsis-v"></i></button>
-                `;
-                taskList.appendChild(newTask);
-                addTaskInput.value = '';
-                // TODO: Enregistrer la tâche dans Supabase
-                // fetch('/api/tasks/add', { method: 'POST', body: JSON.stringify({ title: taskText, due_date: new Date().toISOString().split('T')[0], priority: 'medium' }) })
-            }
-        });
 
+    // Ajouter une tâche
+    if (addTaskBtn && addTaskInput) {
+        addTaskBtn.addEventListener('click', addTask);
         addTaskInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                addTaskBtn.click();
-            }
+            if (e.key === 'Enter') addTask();
         });
+    }
+
+    async function addTask() {
+        const title = addTaskInput.value.trim();
+        if (!title) return;
+
+        try {
+            const response = await fetch('/api/tasks', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ title })
+            });
+            
+            if (response.ok) {
+                const task = await response.json();
+                renderTask(task);
+                addTaskInput.value = '';
+            }
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
+    }
+
+    function renderTask(task) {
+        const taskItem = document.createElement('div');
+        taskItem.className = 'task-item';
+        taskItem.dataset.id = task.id;
+        taskItem.innerHTML = `
+            <label class="task-checkbox">
+                <input type="checkbox" ${task.completed ? 'checked' : ''}>
+                <span class="checkmark"></span>
+            </label>
+            <div class="task-content">
+                <div class="task-title ${task.completed ? 'completed' : ''}">${task.title}</div>
+                <div class="task-meta">
+                    <span class="task-due">${task.due_date}</span>
+                    <span class="task-priority ${task.priority}">${task.priority} priorité</span>
+                </div>
+            </div>
+            <button class="task-menu"><i class="fas fa-ellipsis-v"></i></button>
+        `;
+        
+        if (taskList) {
+            taskList.appendChild(taskItem);
+            taskItem.querySelector('input').addEventListener('change', toggleTask);
+        }
+    }
+
+    async function toggleTask(e) {
+        const taskId = e.target.closest('.task-item').dataset.id;
+        const completed = e.target.checked;
+        
+        try {
+            await fetch(`/api/tasks/${taskId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ completed })
+            });
+            
+            e.target.closest('.task-item').querySelector('.task-title').classList.toggle('completed');
+        } catch (error) {
+            console.error('Erreur:', error);
+        }
     }
 });
